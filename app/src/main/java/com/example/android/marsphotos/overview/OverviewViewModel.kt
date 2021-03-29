@@ -24,15 +24,12 @@ import com.example.android.marsphotos.network.MarsApiService
 import com.example.android.marsphotos.network.MarsPhoto
 import kotlinx.coroutines.launch
 
-/**
- * The [ViewModel] that is attached to the [OverviewFragment].
- */
 class OverviewViewModel : ViewModel() {
     private val _status = MutableLiveData<String>()
     val status: LiveData<String> = _status
 
-    private val _photos = MutableLiveData<MarsPhoto>()
-    var photos: LiveData<MarsPhoto> = _photos
+    private val _photos = MutableLiveData<List<MarsPhoto>>()
+    var photos: LiveData<List<MarsPhoto>> = _photos
 
     init {
         getMarsPhotos()
@@ -41,8 +38,8 @@ class OverviewViewModel : ViewModel() {
     private fun getMarsPhotos() {
         viewModelScope.launch {
             try {
-                _photos.value = MarsApiService.MarsApi.retrofitService.getPhotos()[0]
-                _status.value = "First Mars image URL : ${_photos.value!!.imgSrcUrl}"
+                _photos.value = MarsApiService.MarsApi.retrofitService.getPhotos()
+                _status.value = "Success: Mars properties retrieved"
             } catch (e: Exception) {
                 _status.value = "Failure: ${e.message}"
             }
